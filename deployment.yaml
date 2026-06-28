@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-mini-proj
+spec:
+  replicas: 2 # Number of pods
+  selector:
+    matchLabels:
+      app: k8s-mini-proj
+  template:
+    metadata:
+      labels:
+        app: k8s-mini-proj
+    spec:
+      containers:
+        - name: k8s-mini-proj
+          image: k8s-mini-proj:latest
+          imagePullPolicy: Never # Tell Kubernetes not to pull from a registry
+          # image: vikash95/kubernetes-test-app:latest
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "200m"
+          ports:
+            - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-mini-proj
+spec:
+  selector:
+    app: k8s-mini-proj
+  ports:
+    - port: 8080
+      targetPort: 5000
